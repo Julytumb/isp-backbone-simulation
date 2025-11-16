@@ -1,0 +1,462 @@
+version: 1
+name: belwu_topology
+topology:
+  nodes:
+    aal-hs-1:
+      kind: cisco
+    alb-hs-1:
+      kind: cisco
+    bib-hs-1:
+      kind: cisco
+    boe-1:
+      kind: cisco
+    ess-hs-1:
+      kind: cisco
+    fdh-dhbw-1:
+      kind: cisco
+    fds-stw-1:
+      kind: cisco
+    fra-decix-a99:
+      kind: cisco
+    fra-tc-a99:
+      kind: cisco
+    frb-kg-1:
+      kind: cisco
+    frb-rz-1:
+      kind: cisco
+    frb-rz-2:
+      kind: cisco
+    fuw-hs-1:
+      kind: cisco
+    gei-hs-1:
+      kind: cisco
+    goe-hs-1:
+      kind: cisco
+    hdh-dhbw-1:
+      kind: cisco
+    hdl-city-1:
+      kind: cisco
+    hdl-rz-1:
+      kind: cisco
+    hlb-hs-1:
+      kind: cisco
+    hor-dhbw-1:
+      kind: cisco
+    kar-bib-1:
+      kind: cisco
+    kar-nord-1:
+      kind: cisco
+    kar-rz-1:
+      kind: cisco
+    kar-rz-a99:
+      kind: cisco
+    keh-hs-1:
+      kind: cisco
+    kon-bib-1:
+      kind: cisco
+    kon-rz-1:
+      kind: cisco
+    kue-hs-1:
+      kind: cisco
+    lbg-ph-1:
+      kind: cisco
+    loe-dhbw-1:
+      kind: cisco
+    man-rz-1:
+      kind: cisco
+    man-schl-1:
+      kind: cisco
+    mar-dla-1:
+      kind: cisco
+    mos-dhbw-2:
+      kind: cisco
+    nue-hs-1:
+      kind: cisco
+    ofg-hs-1:
+      kind: cisco
+    pfo-hs-1:
+      kind: cisco
+    rav-dhbw-1:
+      kind: cisco
+    reu-hs-1:
+      kind: cisco
+    rot-hs-1:
+      kind: cisco
+    sgd-ph-1:
+      kind: cisco
+    shl-hs-2:
+      kind: cisco
+    sig-hs-1:
+      kind: cisco
+    stu-al30-1:
+      kind: cisco
+    stu-eti-1:
+      kind: cisco
+    stu-eti-a99:
+      kind: cisco
+    tro-mh-1:
+      kind: cisco
+    tue-mor-1:
+      kind: cisco
+    tue-wae-1:
+      kind: cisco
+    tut-hs-1:
+      kind: cisco
+    ulm-n25-1:
+      kind: cisco
+    ulm-n26-1:
+      kind: cisco
+    vis-hs-1:
+      kind: cisco
+    wei-hs-1:
+      kind: cisco
+  links:
+  - endpoints:
+    - stu-eti-a99:TenGigE0/0/0/9
+    - ulm-n25-1:TenGigE0/0/0/8
+    capacity_mbps: 10000
+  - endpoints:
+    - ulm-n25-1:TenGigE0/0/0/7
+    - ulm-n26-1:TenGigE0/0/0/4
+    capacity_mbps: 10000
+  - endpoints:
+    - hlb-hs-1:TenGigE0/0/0/15
+    - kue-hs-1:TenGigE0/0/0/3
+    capacity_mbps: 10000
+  - endpoints:
+    - kue-hs-1:TenGigE0/0/0/6
+    - shl-hs-2:TenGigabitEthernet0/1/1
+    capacity_mbps: 10000
+  - endpoints:
+    - stu-eti-a99:TenGigE0/0/0/10
+    - ess-hs-1:TenGigE0/0/0/11
+    capacity_mbps: 10000
+  - endpoints:
+    - stu-al30-1:TenGigE0/0/0/16
+    - pfo-hs-1:TenGigE0/0/0/13
+    capacity_mbps: 10000
+  - endpoints:
+    - kar-bib-1:TenGigE0/0/0/18
+    - pfo-hs-1:TenGigE0/0/0/12
+    capacity_mbps: 10000
+  - endpoints:
+    - kon-rz-1:TenGigE0/0/0/10
+    - fdh-dhbw-1:TenGigE0/0/0/9
+    capacity_mbps: 10000
+  - endpoints:
+    - fdh-dhbw-1:TenGigE0/0/0/10
+    - rav-dhbw-1:TenGigE0/0/0/9
+    capacity_mbps: 10000
+  - endpoints:
+    - wei-hs-1:TenGigE0/0/0/8
+    - rav-dhbw-1:TenGigE0/0/0/10
+    capacity_mbps: 10000
+  - endpoints:
+    - sig-hs-1:TenGigE0/0/0/6
+    - rav-dhbw-1:TenGigE0/0/0/8
+    capacity_mbps: 10000
+  - endpoints:
+    - nue-hs-1:TenGigE0/0/0/13
+    - reu-hs-1:TenGigE0/0/0/12
+    capacity_mbps: 10000
+  - endpoints:
+    - ulm-n26-1:TenGigE0/0/0/7
+    - hdh-dhbw-1:TenGigE0/0/0/8
+    capacity_mbps: 10000
+  - endpoints:
+    - hdh-dhbw-1:TenGigE0/0/0/9
+    - aal-hs-1:TenGigE0/0/0/10
+    capacity_mbps: 10000
+  - endpoints:
+    - reu-hs-1:TenGigE0/0/0/14
+    - tue-wae-1:TenGigE0/0/0/13
+    capacity_mbps: 10000
+  - endpoints:
+    - ess-hs-1:TenGigE0/0/0/14
+    - nue-hs-1:TenGigE0/0/0/11
+    capacity_mbps: 10000
+  - endpoints:
+    - kar-rz-a99:HundredGigE0/4/0/1
+    - kar-rz-1:HundredGigE0/0/1/0
+    capacity_mbps: 100000
+  - endpoints:
+    - aal-hs-1:TenGigE0/0/0/12
+    - sgd-ph-1:TenGigE0/0/0/14
+    capacity_mbps: 10000
+  - endpoints:
+    - hor-dhbw-1:TenGigE0/0/0/2
+    - fds-stw-1:TenGigabitEthernet0/0/26
+    capacity_mbps: 10000
+  - endpoints:
+    - keh-hs-1:TenGigE0/0/0/6
+    - fds-stw-1:TenGigabitEthernet0/0/27
+    capacity_mbps: 10000
+  - endpoints:
+    - kue-hs-1:GigabitEthernet0/0/0/2
+    - shl-hs-2:GigabitEthernet0/0/23
+    capacity_mbps: 1000
+  - endpoints:
+    - tro-mh-1:TenGigabitEthernet0/0/4
+    - vis-hs-1:TenGigE0/0/0/2
+    capacity_mbps: 10000
+  - endpoints:
+    - tut-hs-1:TenGigE0/0/0/8
+    - tro-mh-1:TenGigabitEthernet0/0/5
+    capacity_mbps: 10000
+  - endpoints:
+    - tue-wae-1:TenGigE0/0/0/12
+    - tut-hs-1:TenGigE0/0/0/5
+    capacity_mbps: 10000
+  - endpoints:
+    - tut-hs-1:TenGigE0/0/0/7
+    - kon-bib-1:TenGigE0/0/0/12
+    capacity_mbps: 10000
+  - endpoints:
+    - vis-hs-1:TenGigE0/0/0/18
+    - fuw-hs-1:TenGigE0/0/0/9
+    capacity_mbps: 10000
+  - endpoints:
+    - ofg-hs-1:TenGigE0/0/0/15
+    - fuw-hs-1:TenGigE0/0/0/7
+    capacity_mbps: 10000
+  - endpoints:
+    - alb-hs-1:TenGigE0/0/0/4
+    - tue-wae-1:TenGigE0/0/0/9
+    capacity_mbps: 10000
+  - endpoints:
+    - kar-bib-1:TenGigE0/0/0/16
+    - ofg-hs-1:TenGigE0/0/0/14
+    capacity_mbps: 10000
+  - endpoints:
+    - shl-hs-2:TenGigabitEthernet0/0/27
+    - sgd-ph-1:TenGigE0/0/0/15
+    capacity_mbps: 10000
+  - endpoints:
+    - frb-rz-1:TenGigE0/0/0/18
+    - ofg-hs-1:TenGigE0/0/0/12
+    capacity_mbps: 10000
+  - endpoints:
+    - kon-rz-1:TenGigE0/0/0/13
+    - loe-dhbw-1:TenGigabitEthernet0/0/27
+    capacity_mbps: 10000
+  - endpoints:
+    - frb-kg-1:TenGigE0/0/0/9
+    - loe-dhbw-1:TenGigabitEthernet0/1/0
+    capacity_mbps: 10000
+  - endpoints:
+    - kon-rz-1:TenGigE0/0/0/5
+    - rav-dhbw-1:TenGigE0/0/0/11
+    capacity_mbps: 10000
+  - endpoints:
+    - stu-al30-1:TenGigE0/0/0/20
+    - ulm-n26-1:TenGigE0/0/0/5
+    capacity_mbps: 10000
+  - endpoints:
+    - stu-eti-a99:TenGigE0/0/1/7
+    - lbg-ph-1:TenGigE0/0/0/10
+    capacity_mbps: 10000
+  - endpoints:
+    - tue-wae-1:TenGigE0/0/0/14
+    - rot-hs-1:TenGigabitEthernet0/0/5
+    capacity_mbps: 10000
+  - endpoints:
+    - tue-mor-1:TenGigE0/0/0/5
+    - rot-hs-1:TenGigabitEthernet0/0/4
+    capacity_mbps: 10000
+  - endpoints:
+    - stu-eti-a99:TenGigE0/0/1/8
+    - boe-1:TenGigabitEthernet0/0/26
+    capacity_mbps: 10000
+  - endpoints:
+    - hor-dhbw-1:TenGigE0/0/0/7
+    - boe-1:TenGigabitEthernet0/0/27
+    capacity_mbps: 10000
+  - endpoints:
+    - alb-hs-1:TenGigE0/0/0/6
+    - sig-hs-1:TenGigE0/0/0/7
+    capacity_mbps: 10000
+  - endpoints:
+    - stu-eti-a99:TenGigE0/0/1/6
+    - hor-dhbw-1:TenGigE0/0/0/8
+    capacity_mbps: 10000
+  - endpoints:
+    - hor-dhbw-1:TenGigE0/0/0/6
+    - keh-hs-1:TenGigE0/0/0/8
+    capacity_mbps: 10000
+  - endpoints:
+    - ofg-hs-1:TenGigE0/0/0/13
+    - keh-hs-1:TenGigE0/0/0/7
+    capacity_mbps: 10000
+  - endpoints:
+    - kar-rz-1:HundredGigE0/0/1/1
+    - kar-bib-1:HundredGigE0/0/1/0
+    capacity_mbps: 100000
+  - endpoints:
+    - kar-bib-1:HundredGigE0/0/1/1
+    - stu-al30-1:HundredGigE0/0/1/1
+    capacity_mbps: 100000
+  - endpoints:
+    - tut-hs-1:TenGigE0/0/0/6
+    - vis-hs-1:TenGigE0/0/0/16
+    capacity_mbps: 10000
+  - endpoints:
+    - kar-rz-a99:HundredGigE0/4/0/4
+    - frb-rz-1:HundredGigE0/0/1/0
+    capacity_mbps: 100000
+  - endpoints:
+    - lbg-ph-1:TenGigE0/0/0/8
+    - mar-dla-1:TenGigabitEthernet0/0/4
+    capacity_mbps: 10000
+  - endpoints:
+    - hlb-hs-1:TenGigE0/0/0/12
+    - mar-dla-1:TenGigabitEthernet0/0/5
+    capacity_mbps: 10000
+  - endpoints:
+    - stu-eti-a99:TenGigE0/0/1/4
+    - hlb-hs-1:TenGigE0/0/0/17
+    capacity_mbps: 10000
+  - endpoints:
+    - stu-eti-a99:TenGigE0/0/1/5
+    - hlb-hs-1:TenGigE0/0/0/20
+    capacity_mbps: 10000
+  - endpoints:
+    - ulm-n26-1:TenGigE0/0/0/9
+    - bib-hs-1:TenGigE0/0/0/9
+    capacity_mbps: 10000
+  - endpoints:
+    - ulm-n25-1:TenGigE0/0/0/12
+    - gei-hs-1:TenGigabitEthernet0/0/24
+    capacity_mbps: 10000
+  - endpoints:
+    - hlb-hs-1:TenGigE0/0/0/18
+    - lbg-ph-1:TenGigE0/0/0/13
+    capacity_mbps: 10000
+  - endpoints:
+    - aal-hs-1:TenGigE0/0/0/13
+    - shl-hs-2:TenGigabitEthernet0/1/0
+    capacity_mbps: 10000
+  - endpoints:
+    - goe-hs-1:TenGigabitEthernet0/0/27
+    - gei-hs-1:TenGigabitEthernet0/0/27
+    capacity_mbps: 10000
+  - endpoints:
+    - ess-hs-1:TenGigE0/0/0/13
+    - goe-hs-1:TenGigabitEthernet0/0/26
+    capacity_mbps: 10000
+  - endpoints:
+    - stu-eti-a99:HundredGigE0/1/0/0
+    - kar-rz-a99:HundredGigE0/1/0/0
+    capacity_mbps: 100000
+  - endpoints:
+    - wei-hs-1:TenGigE0/0/0/9
+    - bib-hs-1:TenGigE0/0/0/10
+    capacity_mbps: 10000
+  - endpoints:
+    - hdl-rz-1:TenGigE0/0/0/2
+    - hdl-city-1:TenGigE0/0/0/3
+    capacity_mbps: 10000
+  - endpoints:
+    - hdl-city-1:TenGigE0/0/0/4
+    - mos-dhbw-2:TenGigE0/0/0/0
+    capacity_mbps: 10000
+  - endpoints:
+    - hlb-hs-1:TenGigE0/0/0/19
+    - mos-dhbw-2:TenGigE0/0/0/1
+    capacity_mbps: 10000
+  - endpoints:
+    - stu-eti-a99:HundredGigE0/4/0/7
+    - fra-decix-a99:HundredGigE0/1/0/4
+    capacity_mbps: 100000
+  - endpoints:
+    - kar-rz-a99:HundredGigE0/2/0/0
+    - fra-tc-a99:HundredGigE0/0/1/0
+    capacity_mbps: 100000
+  - endpoints:
+    - kar-rz-a99:HundredGigE0/2/0/4
+    - stu-eti-a99:HundredGigE0/4/0/1
+    capacity_mbps: 100000
+  - endpoints:
+    - kar-rz-a99:TenGigE0/0/0/4
+    - kar-nord-1:TenGigE0/0/0/4
+    capacity_mbps: 10000
+  - endpoints:
+    - man-schl-1:TenGigE0/0/0/8
+    - kar-nord-1:TenGigE0/0/0/5
+    capacity_mbps: 10000
+  - endpoints:
+    - stu-eti-1:HundredGigE0/0/1/1
+    - stu-al30-1:HundredGigE0/0/1/0
+    capacity_mbps: 100000
+  - endpoints:
+    - frb-rz-1:TenGigE0/0/0/15
+    - frb-rz-2:TenGigabitEthernet0/0/26
+    capacity_mbps: 10000
+  - endpoints:
+    - frb-rz-1:TenGigE0/0/0/16
+    - frb-rz-2:TenGigabitEthernet0/0/27
+    capacity_mbps: 10000
+  - endpoints:
+    - frb-kg-1:TenGigE0/0/0/7
+    - frb-rz-2:TenGigabitEthernet0/0/25
+    capacity_mbps: 10000
+  - endpoints:
+    - fra-tc-a99:HundredGigE0/1/0/7
+    - fra-decix-a99:HundredGigE0/1/0/0
+    capacity_mbps: 100000
+  - endpoints:
+    - stu-eti-a99:HundredGigE0/4/0/11
+    - fra-decix-a99:HundredGigE0/1/0/3
+    capacity_mbps: 100000
+  - endpoints:
+    - stu-eti-1:HundredGigE0/0/1/0
+    - stu-eti-a99:HundredGigE0/4/0/0
+    capacity_mbps: 100000
+  - endpoints:
+    - fra-decix-a99:HundredGigE0/1/0/10
+    - fra-tc-a99:HundredGigE0/1/0/0
+    capacity_mbps: 100000
+  - endpoints:
+    - kar-rz-a99:HundredGigE0/2/0/7
+    - fra-tc-a99:HundredGigE0/0/1/1
+    capacity_mbps: 100000
+  - endpoints:
+    - stu-eti-a99:HundredGigE0/4/0/20
+    - tue-mor-1:HundredGigE0/0/1/0
+    capacity_mbps: 100000
+  - endpoints:
+    - tue-mor-1:HundredGigE0/0/1/1
+    - tue-wae-1:HundredGigE0/0/1/0
+    capacity_mbps: 100000
+  - endpoints:
+    - tue-wae-1:HundredGigE0/0/1/1
+    - kon-bib-1:HundredGigE0/0/1/0
+    capacity_mbps: 100000
+  - endpoints:
+    - kon-bib-1:HundredGigE0/0/1/1
+    - kon-rz-1:HundredGigE0/0/1/0
+    capacity_mbps: 100000
+  - endpoints:
+    - kon-rz-1:HundredGigE0/0/1/1
+    - frb-kg-1:HundredGigE0/0/1/0
+    capacity_mbps: 100000
+  - endpoints:
+    - frb-kg-1:HundredGigE0/0/1/1
+    - frb-rz-1:HundredGigE0/0/1/1
+    capacity_mbps: 100000
+  - endpoints:
+    - kar-rz-a99:HundredGigE0/4/0/6
+    - man-schl-1:HundredGigE0/0/1/1
+    capacity_mbps: 100000
+  - endpoints:
+    - man-schl-1:HundredGigE0/0/1/0
+    - man-rz-1:HundredGigE0/0/1/1
+    capacity_mbps: 100000
+  - endpoints:
+    - man-rz-1:HundredGigE0/0/1/0
+    - hdl-rz-1:HundredGigE0/0/1/1
+    capacity_mbps: 100000
+  - endpoints:
+    - hdl-rz-1:HundredGigE0/0/1/0
+    - fra-decix-a99:HundredGigE0/1/0/15
+    capacity_mbps: 100000
+$schema: https://ndt.example/schema/ndt-topology.schema.json
