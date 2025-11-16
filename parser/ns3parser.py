@@ -1,7 +1,7 @@
 import yaml
 
-YAML_PATH = "scratch/parser/belwu_1.yaml"
-CPP_OUTPUT_PATH = "scratch/belwu-topo/weathermap_generated_topo.cc"
+YAML_PATH = "parser/belwu_1.yaml"
+CPP_OUTPUT_PATH = "belwu-topo/weathermap_generated_topo.cc"
 
 CPP_HEADER = ['#include "ns3/core-module.h"',
     '#include "ns3/network-module.h"',
