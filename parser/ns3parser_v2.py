@@ -5,13 +5,15 @@ import pandas as pd
 import networkx as nx
 
 # --- Konfiguration ---
-BASE_PATH = "scratch/parser"
-YAML_PATH = os.path.join(BASE_PATH, "belwu.yaml")
+BASE_PATH = "sources/"
+ROUTERS_PATH = os.path.join(BASE_PATH, "routers.csv")
+LINKS_PATH = os.path.join(BASE_PATH, "links.csv")
 ROUTES_CSV_PATH = os.path.join(BASE_PATH, "routes.csv")
 TRAFFIC_CSV_PATH = os.path.join(BASE_PATH, "traffic.csv")
 CPP_OUTPUT_PATH = os.path.join(BASE_PATH, "generated_belwu_topo_v2.cc")
 
-print(f"Lese YAML von: {YAML_PATH}")
+print(f"Lese Routers-CSV von: {ROUTERS_PATH}")
+print(f"Lese Links-CSV von: {LINKS_PATH}")
 print(f"Lese Routes-CSV von: {ROUTES_CSV_PATH}")
 print(f"Lese Traffic-CSV von: {TRAFFIC_CSV_PATH}")
 
@@ -50,8 +52,24 @@ CPP_HEADER = [
     ''
 ]
 
-# (Footer bleibt gleich)
+# (Footer with logging)
 CPP_FOOTER = [
+    '',
+    '    // Enable logging for the applications actually used in this simulation      most important',
+    '    ns3::LogComponentEnable("OnOffApplication", ns3::LOG_LEVEL_INFO);',
+    '    ns3::LogComponentEnable("PacketSink", ns3::LOG_LEVEL_INFO);',
+    '',
+    '',
+    '',
+    '    // IPv4 protocol logs (shows packet forwarding, routing decisions)',
+    '    ns3::LogComponentEnable("Ipv4L3Protocol", ns3::LOG_LEVEL_INFO);',
+    '',
+    '    // UDP protocol logs (shows UDP packet processing)',
+    '    ns3::LogComponentEnable("UdpL4Protocol", ns3::LOG_LEVEL_INFO);',
+    '',
+    '    // If you have TCP flows instead/additionally:',
+    '    ns3::LogComponentEnable("TcpL4Protocol", ns3::LOG_LEVEL_INFO);',
+    '    ns3::LogComponentEnable("TcpSocketBase", ns3::LOG_LEVEL_INFO);',
     '',
     '    NS_LOG_INFO("--- 7. Running Simulation ---");',
     '    Simulator::Stop(Seconds(20.0));',
@@ -63,75 +81,75 @@ CPP_FOOTER = [
 ]
 
 # --- 1. Alle Dateien laden ---
-try:
-    with open(YAML_PATH, "r") as f:
-        network_dict = yaml.safe_load(f)
-    df_routes = pd.read_csv(ROUTES_CSV_PATH)
-    df_traffic = pd.read_csv(TRAFFIC_CSV_PATH)
-except FileNotFoundError as e:
-    print(f"FEHLER: Datei nicht gefunden: {e.filename}")
-    sys.exit(1) 
+#with open(YAML_PATH, "r") as f:
+#    network_dict = yaml.safe_load(f)
+df_routers = pd.read_csv(ROUTERS_PATH)
+df_links = pd.read_csv(LINKS_PATH)
+df_routes = pd.read_csv(ROUTES_CSV_PATH)
+df_traffic = pd.read_csv(TRAFFIC_CSV_PATH)
 
-topology = network_dict["topology"]
-links = topology["links"]
-nodes_from_yaml = topology.get("nodes", {})
+
+#topology = network_dict["topology"]
+#links = topology["links"]
+#nodes_from_yaml = topology.get("nodes", {})
 
 cpp_code_lines = []
 cpp_code_lines.extend(CPP_HEADER)
 
 # --- 2. 'kind'-Map generieren (wie gehabt) ---
 # ... (keine Änderungen hier, Code weggelassen) ...
-cpp_code_lines.append("    NS_LOG_INFO(\"--- 1b. Populating Node 'Kind' Map ---\");")
-for node_name, node_data in nodes_from_yaml.items():
-    kind = node_data.get("kind", "unknown")
-    if "switch" in kind:
-        continue
-    cpp_code_lines.append(f'    nodeKindMap["{node_name}"] = "{kind}";')
-cpp_code_lines.append("")
+cpp_code_lines.append("    NS_LOG_INFO(\"--- 1. Creating Nodes ---\");")
+for index, row in df_routers.iterrows():
+    node_name = row['node']
+    #kind = row.get("kind")
 
-# --- 3. Knoten generieren (wie gehabt) ---
-all_node_names = set()
-for link in links:
-    for endpoint_str in link["endpoints"]:
-        all_node_names.add(endpoint_str.split(":")[0]) # <--- GEÄNDERT: Stellt sicher, dass wir den Namen vor dem ':' bekommen
+    #if "switch" in kind:
+        #continue
+    #cpp_code_lines.append(f'    nodeKindMap["{node_name}"] = "{kind}";')
+#cpp_code_lines.append("")
 
-cpp_code_lines.append("    NS_LOG_INFO(\"--- 2. Creating Nodes ---\");")
-# ... (Rest der Knotenerstellung ist gleich, Code weggelassen) ...
-for name in sorted(list(all_node_names)):
     cpp_code_lines.append(f'    {{')
-    cpp_code_lines.append(f'        Ptr<Node> node = CreateObject<Node>();')
-    cpp_code_lines.append(f'        nodeMap["{name}"] = node;')
-    cpp_code_lines.append(f'        allNodes.Add(node);')
-    cpp_code_lines.append(f'        Names::Add("{name}", node);')
-    cpp_code_lines.append(f'        if (nodeKindMap.find("{name}") == nodeKindMap.end()) {{')
-    cpp_code_lines.append(f'            nodeKindMap["{name}"] = "generic-router";')
-    cpp_code_lines.append(f'        }}')
+    cpp_code_lines.append(f'    Ptr<Node> node = CreateObject<Node>();')
+    cpp_code_lines.append(f'    nodeMap["{node_name}"] = node;')
+    cpp_code_lines.append(f'    allNodes.Add(node);')
+    cpp_code_lines.append(f'    Names::Add("{node_name}", node);')
     cpp_code_lines.append(f'    }}')
-cpp_code_lines.append(f'    NS_LOG_INFO("Created " << allNodes.GetN() << " nodes.");')
+
+    cpp_code_lines.append(f'    NS_LOG_INFO("Created " << allNodes.GetN() << " nodes.");')
+
+cpp_code_lines.append("    NS_LOG_INFO(\"--- Installing Internet Stack Helper ---\");")
 cpp_code_lines.append(f'    stack.Install(allNodes);')
-cpp_code_lines.append(f'')
 
 
 # --- 4. Links generieren & Maps für Routing erstellen ---
-cpp_code_lines.append("    NS_LOG_INFO(\"--- 3. Creating Links & Predicting IPs ---\");")
+cpp_code_lines.append("    NS_LOG_INFO(\"--- 2. Creating Links & Predicting IPs ---\");")
 
 # Python-Dictionaries, die wir füllen, um das Routing zu berechnen
 node_ip_map = {}       # Key: node_name -> Value: primary_ip (für Ziel-IP)
 next_hop_ip_map = {}   # Key: (node_a, node_b) -> Value: ip_of_b (für next_hop IP)
 routing_iface_map = {} # <--- NEU: Key: (node_a, node_b) -> Value: cxx_variable_name_of_iface_index
 
-for i, link in enumerate(links):
-    link_num = i + 1
+for index, row in df_links.iterrows():
+    link_num = index + 1
     
     # --- NEU: Port-Namen parsen ---
     # endpoint_a_full = "stu-al30-1:TenGigE0/0/0/16"
-    endpoint_a_full = link["endpoints"][0]
-    endpoint_b_full = link["endpoints"][1]
+    node_a = row["a_node"]
+    node_b = row["b_node"]
     
-    node_a, port_a = endpoint_a_full.split(":", 1) # Trennt am ersten ':'
-    node_b, port_b = endpoint_b_full.split(":", 1) # Trennt am ersten ':'
-    
-    capacity_str = f"{link['capacity_mbps'] // 1000}Gbps"
+    capacity = row["capacity_mbps"] / 1000
+
+    interface_a = row["a_iface"]
+    interface_b = row ["b_iface"]
+
+    for i in range(len(interface_a)):
+        if interface_a[i] in ["0","1","2","3","4","5","6","7","8","9"]:
+            port_a = interface_a[i:]
+            break
+    for i in range(len(interface_b)):
+        if interface_b[i] in ["0","1","2","3","4","5","6","7","8","9"]:
+            port_b = interface_b[i:]
+            break
     
     # IP-Adressen vorhersagen (wie gehabt)
     subnet_x = (link_num // 254) + 1
@@ -153,7 +171,7 @@ for i, link in enumerate(links):
     interfaces_var = f"interfaces{link_num}"
     
     cpp_code_lines.append(f'    // Link {link_num}: {node_a}({port_a}) <--> {node_b}({port_b})') # <--- NEU: Mit Port-Namen
-    cpp_code_lines.append(f'    p2p.SetDeviceAttribute("DataRate", StringValue("{capacity_str}"));')
+    cpp_code_lines.append(f'    p2p.SetDeviceAttribute("DataRate", StringValue("{capacity}"));')
     cpp_code_lines.append(f'    p2p.SetChannelAttribute("Delay", StringValue("1ms"));')
     cpp_code_lines.append(f'    NodeContainer {link_var}(nodeMap["{node_a}"], nodeMap["{node_b}"]);')
     cpp_code_lines.append(f'    NetDeviceContainer {devices_var} = p2p.Install({link_var});')
@@ -180,11 +198,30 @@ for i, link in enumerate(links):
     routing_iface_map[(node_b, node_a)] = iface_b_idx_var # Speichert den C++ *Variablennamen*
 
 
-# --- 5. Dijkstra-Graph bauen (wie gehabt) ---
+# --- 5. Dijkstra-Graph aus physischen Links bauen ---
 G = nx.DiGraph()
+
+# Erstelle ein Dictionary für Routengewichte aus routes.csv
+route_weights = {}
 for row in df_routes.itertuples():
-    G.add_edge(row.srcrouter, row.nexthop, weight=row.weight)
-print("Dijkstra-Graph aus routes.csv erstellt.")
+    route_weights[(row.srcrouter, row.nexthop)] = row.weight
+
+# Baue Graph aus physischen Links der YAML-Topologie
+for link in df_links:
+    endpoint_a_full = link["endpoints"][0]
+    endpoint_b_full = link["endpoints"][1]
+    node_a = endpoint_a_full.split(":")[0]
+    node_b = endpoint_b_full.split(":")[0]
+
+    # Verwende Gewicht aus routes.csv falls vorhanden, sonst Default 10
+    weight = route_weights.get((node_a, node_b), 10)
+    G.add_edge(node_a, node_b, weight=weight)
+
+    # Bidirektionale Gewichte
+    weight_reverse = route_weights.get((node_b, node_a), 10)
+    G.add_edge(node_b, node_a, weight=weight_reverse)
+
+print("Dijkstra-Graph aus physischen YAML-Links erstellt.")
 
 # --- 6. Traffic & Statisches Routing generieren ---
 cpp_code_lines.append("    NS_LOG_INFO(\"--- 4. Calculating Routes & Adding Traffic ---\");")
