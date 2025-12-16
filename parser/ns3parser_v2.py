@@ -207,11 +207,7 @@ for row in df_routes.itertuples():
     route_weights[(row.srcrouter, row.nexthop)] = row.weight
 
 # Baue Graph aus physischen Links der YAML-Topologie
-for link in df_links:
-    endpoint_a_full = link["endpoints"][0]
-    endpoint_b_full = link["endpoints"][1]
-    node_a = endpoint_a_full.split(":")[0]
-    node_b = endpoint_b_full.split(":")[0]
+for (node_a, node_b) in routing_iface_map.keys() :
 
     # Verwende Gewicht aus routes.csv falls vorhanden, sonst Default 10
     weight = route_weights.get((node_a, node_b), 10)
