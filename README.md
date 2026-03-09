@@ -1,7 +1,16 @@
 ## Programm runnen
 ```
-./ns-3-dev/ns3 run scratch/topo-scripts/weathermap_generated_topo
+cd ns-3-dev && ./ns3 run network-simulation && cd ..
 ```
+
+## Run everything
+
+chmod +x run_sim.th
+./run_sim.th
+
+## Generate files
+
+python3 parser/genfiles.py 10
 
 ## Builden
 ```
