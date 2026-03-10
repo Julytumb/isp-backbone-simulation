@@ -18,7 +18,11 @@ using namespace ns3;
 
 NS_LOG_COMPONENT_DEFINE("NetworkSimulation");
 
-//Function for skipping the line breaks
+/**
+ * @brief Trims leading and trailing whitespace from a string.
+ * @param str The string to trim.
+ * @return The trimmed string.
+ */
 std::string trim(const std::string& str) {
     size_t first = str.find_first_not_of(" \t\r\n");
     if (std::string::npos == first) {
@@ -28,40 +32,58 @@ std::string trim(const std::string& str) {
     return str.substr(first, (last - first + 1));
 }
 
-// Callback function for transmitted packets
+/**
+ * @brief Callback function to track transmitted bytes on a net device.
+ * @param packet The transmitted packet.
+ * @param dev The net device that transmitted the packet.
+ * @param deviceTxBytes Map to store the cumulative transmitted bytes per device.
+ */
 static void TxCallback(Ptr<const Packet> packet, Ptr<NetDevice> dev, std::map<Ptr<NetDevice>, uint64_t>* deviceTxBytes) {
     (*deviceTxBytes)[dev] += packet->GetSize();
 }
 
-// Callback function for received packets
+/**
+ * @brief Callback function to track received bytes on a net device.
+ * @param packet The received packet.
+ * @param dev The net device that received the packet.
+ * @param deviceRxBytes Map to store the cumulative received bytes per device.
+ */
 static void RxCallback(Ptr<const Packet> packet, Ptr<NetDevice> dev, std::map<Ptr<NetDevice>, uint64_t>* deviceRxBytes) {
     (*deviceRxBytes)[dev] += packet->GetSize();
 }
 
-// Structure to hold link information
+/**
+ * @brief Structure to hold link information parsed from CSV.
+ */
 struct Link {
-    std::string a_node;
-    std::string a_iface;
-    std::string b_node;
-    std::string b_iface;
-    uint32_t capacity_mbps;
-    uint32_t line;
+    std::string a_node;         ///< Name of node A
+    std::string a_iface;        ///< Interface name on node A
+    std::string b_node;         ///< Name of node B
+    std::string b_iface;        ///< Interface name on node B
+    uint32_t capacity_mbps;     ///< Link capacity in Mbps
+    uint32_t line;              ///< Line identifier
 };
 
-// Structure to hold router information
+/**
+ * @brief Structure to hold router information parsed from CSV.
+ */
 struct Router {
-    std::string node;
-    std::string kind;
+    std::string node;           ///< Name of the router node
+    std::string kind;           ///< Type or kind of the router
 };
 
-// Structure to hold route information
+/**
+ * @brief Structure to hold route information parsed from CSV.
+ */
 struct Route {
-    std::string srcrouter;
-    std::string nexthop;
-    uint32_t weight;
+    std::string srcrouter;      ///< Source router name
+    std::string nexthop;        ///< Next hop router name
+    uint32_t weight;            ///< Routing weight/cost
 };
 
-// Structure to hold traffic information
+/**
+ * @brief Structure to hold traffic flow information parsed from CSV.
+ */
 struct Traffic {
     std::string srcRouter;
     std::string destRouter;
@@ -74,7 +96,12 @@ struct Traffic {
 
 
 
-// Function to read CSV file and parse lines
+/**
+ * @brief Splits a string by a given delimiter.
+ * @param s The string to split.
+ * @param delimiter The character used to split the string.
+ * @return A vector of tokens.
+ */
 std::vector<std::string> split(const std::string& s, char delimiter) {
     std::vector<std::string> tokens;
     std::string token;
@@ -85,7 +112,11 @@ std::vector<std::string> split(const std::string& s, char delimiter) {
     return tokens;
 }
 
-// Read routers from CSV
+/**
+ * @brief Reads router definitions from a CSV file.
+ * @param filename Path to the CSV file.
+ * @return A map of router names to Router structures.
+ */
 std::map<std::string, Router> readRouters(const std::string& filename) {
     std::map<std::string, Router> routers;
     std::ifstream file(filename);
@@ -120,7 +151,11 @@ std::map<std::string, Router> readRouters(const std::string& filename) {
     return routers;
 }
 
-// Read links from CSV
+/**
+ * @brief Reads link definitions from a CSV file.
+ * @param filename Path to the CSV file.
+ * @return A vector of Link structures.
+ */
 std::vector<Link> readLinks(const std::string& filename) {
     std::vector<Link> links;
     std::ifstream file(filename);
@@ -152,7 +187,11 @@ std::vector<Link> readLinks(const std::string& filename) {
     return links;
 }
 
-// Read routes from CSV
+/**
+ * @brief Reads static route definitions from a CSV file.
+ * @param filename Path to the CSV file.
+ * @return A vector of Route structures.
+ */
 std::vector<Route> readRoutes(const std::string& filename) {
     std::vector<Route> routes;
     std::ifstream file(filename);
@@ -194,7 +233,11 @@ std::vector<Route> readRoutes(const std::string& filename) {
     return routes;
 }
 
-// Read traffic from CSV
+/**
+ * @brief Reads traffic flow definitions from a CSV file.
+ * @param filename Path to the CSV file.
+ * @return A vector of Traffic structures.
+ */
 std::vector<Traffic> readTraffic(const std::string& filename) {
     std::vector<Traffic> trafficFlows;
     std::ifstream file(filename);
@@ -293,19 +336,6 @@ int main(int argc, char *argv[]) {
         FlowMonitorHelper flowmon;
         Ptr<FlowMonitor> monitor;
 
-        // Setup CSV for traffic over nodes
-        //std::ofstream trafficCsv(outputFile);
-        //std::map<std::string, uint64_t> prevTxBytes;
-        //std::map<std::string, uint64_t> prevRxBytes;
-        //for (auto& pair : nodeMap) {
-            //prevTxBytes[pair.first] = 0;
-            //prevRxBytes[pair.first] = 0;
-        //}
-        //trafficCsv << "Time";
-        //for (auto& pair : nodeMap) {
-            //trafficCsv << "," << pair.first << "_Tx," << pair.first << "_Rx";
-        //}
-        //trafficCsv << std::endl;
 
         std::function<void()> collectTraffic;
 
@@ -317,62 +347,8 @@ int main(int argc, char *argv[]) {
 
         InternetStackHelper internet;
         internet.Install(nodes);
-        /*
-        // ---------------------------------------------------------------------
-        // TOPOLOGY OPTION 1: build from links.csv (original behavior)
-        //
-        // This block is kept for easy toggling. To use it instead of the
-        // routes-based topology below, comment out the "TOPOLOGY OPTION 2"
-        // block and uncomment this one.
-        // ---------------------------------------------------------------------
-        
-        for (const auto& link : links) {
-            if (nodeMap.find(link.a_node) != nodeMap.end() &&
-                nodeMap.find(link.b_node) != nodeMap.end()) {
 
-                // Create point-to-point channel
-                PointToPointHelper p2p;
-                std::stringstream ss;
-                ss << link.capacity_mbps << "Mbps";
-                p2p.SetDeviceAttribute("DataRate", StringValue(ss.str()));
-                p2p.SetChannelAttribute("Delay", StringValue("2ms"));
-
-                NodeContainer linkNodes;
-                linkNodes.Add(nodeMap[link.a_node]);
-                linkNodes.Add(nodeMap[link.b_node]);
-
-                NetDeviceContainer devices = p2p.Install(linkNodes);
-                deviceContainers.push_back(devices);
-                deviceRouterPairs.emplace_back(link.a_node, link.b_node);
-
-                // Set up tracing for transmitted bytes
-                for (uint32_t i = 0; i < devices.GetN(); ++i) {
-                    Ptr<NetDevice> dev = devices.Get(i);
-                    deviceTxBytes[dev] = 0;
-                    deviceRxBytes[dev] = 0;
-                    Ptr<PointToPointNetDevice> p2pDev = DynamicCast<PointToPointNetDevice>(dev);
-                    if (p2pDev) {
-                        Callback<void, Ptr<const Packet>> txCb = [dev, &deviceTxBytes](Ptr<const Packet> packet) {
-                            TxCallback(packet, dev, &deviceTxBytes);
-                        };
-                        p2pDev->TraceConnectWithoutContext("MacTx", txCb);
-                        Callback<void, Ptr<const Packet>> rxCb = [dev, &deviceRxBytes](Ptr<const Packet> packet) {
-                            RxCallback(packet, dev, &deviceRxBytes);
-                        };
-                        p2pDev->TraceConnectWithoutContext("MacRx", rxCb);
-                    }
-                }
-            }
-        }
-        */
-        
-        // ---------------------------------------------------------------------
-        // TOPOLOGY OPTION 2: build physical links directly from routes.csv
-        //
-        // For each (srcrouter, nexthop) in routes.csv, we create a point-to-point
-        // link if both routers exist. This way, the Dijkstra graph and the
-        // physical topology are consistent even if links.csv is incomplete.
-        // ---------------------------------------------------------------------
+        // build physical links directly from routes.csv
         for (const auto& route : routes) {
             auto itSrc = nodeMap.find(route.srcrouter);
             auto itNh  = nodeMap.find(route.nexthop);
@@ -437,7 +413,6 @@ int main(int argc, char *argv[]) {
             nodeDeviceMap[name] = devs;
         }
 
-        //NS_LOG_INFO("Created " << deviceContainers.size() << " links (from routes.csv topology)");
 
         // Assign IP addresses
         Ipv4AddressHelper address;
@@ -498,10 +473,8 @@ int main(int argc, char *argv[]) {
             adj[u].push_back(std::make_pair(v, route.weight));
         }
 
-        // ---------------------------------------------------------------------
-        // TEMPORARY: Make routes bidirectional (easy to comment out)
-        // This adds reverse edges so if A->B exists, B->A is also created.
-        // ---------------------------------------------------------------------
+    
+        // Make routes bidirectional
         for (const auto& route : routes) {
             auto itSrc = routerIndex.find(route.srcrouter);
             auto itNh  = routerIndex.find(route.nexthop);
@@ -558,34 +531,7 @@ int main(int argc, char *argv[]) {
             NS_LOG_INFO("Primary IP for router " << name << " = " << primary);
         }
 
-        // collectTraffic = [&]() {
-        //     double time = Simulator::Now().GetSeconds();
-        //     trafficCsv << time;
-        //     for (auto& pair : nodeMap) {
-        //         Ptr<Node> node = pair.second;
-        //         uint64_t totalTx = 0;
-        //         uint64_t totalRx = 0;
-        //         for (uint32_t i = 0; i < node->GetNDevices(); ++i) {
-        //             Ptr<NetDevice> dev = node->GetDevice(i);
-        //             totalTx += deviceTxBytes[dev];
-        //             totalRx += deviceRxBytes[dev];
-        //         }
-        //         uint64_t diffTx = totalTx - prevTxBytes[pair.first];
-        //         uint64_t diffRx = totalRx - prevRxBytes[pair.first];
-        //         prevTxBytes[pair.first] = totalTx;
-        //         prevRxBytes[pair.first] = totalRx;
-        //         trafficCsv << "," << diffTx << "," << diffRx;
-        //     }
-        //     trafficCsv << std::endl;
-        //     if (time + 1.0 < 30.0) {
-        //         Simulator::Schedule(Seconds(1.0), collectTraffic);
-        //     }
-        // };
-
-        //----------------------------------------------
-            //NEU!!!
-        //----------------------------------------------
-
+       
         // Create Mapping file
         if (i == 0) {
             std::string mapFileName = "../outputs/link_map.csv"; // Suffix entfernt
@@ -732,7 +678,6 @@ int main(int argc, char *argv[]) {
                 Ipv4Address nextHopAddr;
 
                 // Use deviceRouterPairs to determine which router is on which side of the link.
-                // This works for both topology options (links.csv and routes.csv).
                 const std::pair<std::string, std::string>& routerPair = deviceRouterPairs[static_cast<size_t>(linkIdx)];
                 if (routerPair.first == srcName) {
                     outDev = devices.Get(0);
@@ -753,11 +698,6 @@ int main(int argc, char *argv[]) {
                 }
 
                 staticRouting->AddHostRouteTo(destAddr, nextHopAddr, static_cast<uint32_t>(outIfIndex));
-                //NS_LOG_INFO("Routing: " << srcName << " -> " << destName
-                            //<< " via next-hop " << nextHopName
-                            //<< " destAddr=" << destAddr
-                            //<< " nextHopAddr=" << nextHopAddr
-                            //<< " outIfIndex=" << static_cast<uint32_t>(outIfIndex));
             }
         }
 
