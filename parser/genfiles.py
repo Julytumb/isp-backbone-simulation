@@ -5,10 +5,10 @@ import os
 
 output_folder = "generated_sources"
 
-# Read the routers from routers_template.csv
+# Read the links from links.csv and store the nodes in separate lists
 nodes_a = []
 nodes_b = []
-# Pfad ggf. anpassen, falls routers.csv woanders liegt, hier original belassen
+
 with open('sources/links.csv', mode='r') as file:
     csv_reader = csv.reader(file)
     next(csv_reader)  # Skip header
@@ -35,7 +35,7 @@ for i in range(n):
     number_of_indices = random.choice(list(range(1,len(indices)+1)))
     random_indices = random.sample(indices, number_of_indices)
 
-    # Logic remains: Iterate through routers and create random flows
+    # Iterate through routers and create random flows
     for index in random_indices:
         src = nodes_a[index]
         # Pick a destination that is not the source
@@ -46,18 +46,13 @@ for i in range(n):
         duration = random.choice(durations)
         protocol = 'udp'
         
-        # Packet size calculation (logic from previous context implies this is needed)
-        # Im originalen Skript wurde packetSize hier nicht explizit berechnet, 
-        # aber im Traffic-Array auch nicht geschrieben (siehe traffic.append unten).
-        # Ich belasse es beim Original-Schema:
-        
+        # Packet size calculation 
         traffic.append([src, dest, amount, packets, duration, protocol])
 
 
     # Write traffic{suffix}.csv
     with open(traffic_file, mode='w', newline='') as file:
         csv_writer = csv.writer(file)
-        # Header matching the structure used in your simulation
         csv_writer.writerow(['SrcRouter', 'DestRouter', 'Amount', 'Number of Packets', 'Duration', 'Protocol'])
         for t in traffic:
             csv_writer.writerow(t)
