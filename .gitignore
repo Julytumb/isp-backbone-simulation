@@ -1,5 +1,5 @@
 .vscode/
 
-outputs/
-generated_sources/
-sources/
+outputs/*
+generated_sources/*
+sources/*
