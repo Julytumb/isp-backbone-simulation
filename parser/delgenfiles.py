@@ -29,7 +29,5 @@ def delete_files(file_type):
         else:
             print(f"File {filename} not found, stopping for {file_type}")
 
-# Delete links, routes, traffic files
-delete_files('links')
-delete_files('routes')
+# Delete traffic files
 delete_files('traffic')
